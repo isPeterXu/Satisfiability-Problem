@@ -22,7 +22,7 @@ public class main {
 		}
 		else
 		{
-			file = "uf200-01.cnf";
+			file = "uf20-01.cnf";
 			test = true;
 		}
 		System.out.println("File Selected: " + file);
@@ -33,7 +33,7 @@ public class main {
 			r = new BufferedReader(new FileReader(file));
 			
 			ArrayList<String> list = new ArrayList();
-			Equation equation = new Equation();
+			Formula equation = new Formula();
 			int variabes;
 			int clauses;			
 			String line;
@@ -67,16 +67,16 @@ public class main {
 			System.out.println("Number of Clauses: " + equation.getSize());
 			long startTime = System.currentTimeMillis();
 			boolean satisfiable = equation.applyDPLL(equation);
+			System.out.println("The Number of Recursive Calls: "+equation.getrCallSum());
 			long endTime   = System.currentTimeMillis();
+			long totalTime = endTime - startTime;
+			System.out.println("Elapsed Time: " + totalTime + " ms");
 			if(satisfiable){
 				System.out.println("Result: SAT");
 				equation.printSATSet();
 			} else {
 				System.out.println("Result: UNSAT");
 			}
-			
-			long totalTime = endTime - startTime;
-			System.out.println("Elapsed Time: " + totalTime + " ms");
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

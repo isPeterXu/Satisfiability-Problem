@@ -1,15 +1,21 @@
 import java.util.ArrayList;
 
-public class Equation {
+public class Formula {
 	
 	private ArrayList<Clause> clauses;
 	private ArrayList<Integer> SATSet; //a set of SAT
+	public static int rCallSum = 0;
+
+	public static int getrCallSum() {
+		return rCallSum;
+	}
+
 	//constructor
-	public Equation(){
+	public Formula(){
 		this.clauses = new ArrayList<Clause>();
 		this.SATSet = new ArrayList<Integer>();
 	}
-	public Equation(Equation eq){
+	public Formula(Formula eq){
 		clauses = new ArrayList<Clause>();
 		this.SATSet = new ArrayList<Integer>();
 		for(Clause c : eq.getClauses()) {
@@ -96,8 +102,9 @@ public class Equation {
 	}
 
 	//Implementation based on DPLL
-	public boolean applyDPLL(Equation eq){
+	public boolean applyDPLL(Formula eq){
 
+		rCallSum ++;
 		// if equation has no clauses, return true
 		if(eq.getSize() == 0){return true;}
 		// if an equation has an empty clause, return false
@@ -106,17 +113,15 @@ public class Equation {
 		// if equation contains a clause with one literal
 		int unitClause = eq.hasSingle();
 		if(unitClause != 0){
-			Equation eqWthUnitClause = new Equation(eq);
+			Formula eqWthUnitClause = new Formula(eq);
 			eqWthUnitClause.simplify(unitClause);
 			return applyDPLL(eqWthUnitClause);
 		}
 
-		/**
-		 * Select a literal from a shortest clause to branch on.
-		 */
+		//Select a literal from a shortest clause to branch on
 		int selected = eq.selectFromShortestClause();
-		Equation complementedEquation = new Equation(eq);
-		Equation uncomplementedEquation = new Equation(eq);
+		Formula complementedEquation = new Formula(eq);
+		Formula uncomplementedEquation = new Formula(eq);
 		complementedEquation.simplify(selected);
 		uncomplementedEquation.simplify(-1*selected);
 		if(applyDPLL(complementedEquation) == true){
